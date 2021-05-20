@@ -1,5 +1,8 @@
 from os import walk
 from pprint import pprint
+from typing import List
+
+from numpy import take, average
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -49,11 +52,56 @@ def create_dict_all():
     return data_dict
 
 
-if __name__ == '__main__':
-    #data = create_dict_authors()
-    #print(len(data['Dennis+Schwartz']['label.4class.Dennis+Schwartz']))
-    #print(data)
-    dict_all = create_dict_all()
+def analyze(analyze_set: List):
 
-    corpus = dict_all['subj']
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(stop_words='english')
+    # print(vectorizer.get_stop_words())
+    X = vectorizer.fit_transform(analyze_set)
+    features = vectorizer.get_feature_names()
+    # print(features)
+    print('TOTAL DIFFERENT WORDS AMOUNT:', len(features))
+
+    ######################## WORDS COUNTER
+
+    words_counter = {}
+    words_len = []
+    for i, _ in enumerate(features):
+        words_counter[i] = 0
+    for opinion in X.toarray():
+        words_len.append(sum(opinion))
+        for i, word_count in enumerate(opinion):
+            words_counter[i] += word_count
+
+    for i, feature in enumerate(features):
+        words_counter[feature] = words_counter.pop(i)
+
+    # for key, value in words_counter.items():
+    #     print(key, value)
+
+    words_counter = {k: v for k, v in sorted(words_counter.items(), key=lambda item: item[1], reverse=True)[:10]}
+    print(words_counter)
+
+    ########################## LENGTH COUNTER
+
+    min_len = min(words_len)
+    max_len = max(words_len)
+    avg_len = average(words_len)
+
+    print('min', min_len)
+    print('max', max_len)
+    print('avg', avg_len)
+
+
+if __name__ == '__main__':
+
+    dict_all = create_dict_all()
+    analyze(dict_all['subj'])
+
+
+
+
+
+
+
+
+
