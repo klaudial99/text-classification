@@ -73,6 +73,7 @@ def analyze(analyze_set: List):
     features = vectorizer.get_feature_names()
     # print(features)
     print('TOTAL DIFFERENT WORDS AMOUNT:', len(features))
+    print('TOTAL OPINIONS AMOUNT:', len(X.toarray()))
 
     ######################## WORDS COUNTER
 
@@ -108,15 +109,25 @@ def analyze(analyze_set: List):
 if __name__ == '__main__':
 
     dict_all = create_dict_all()
-    #analyze(dict_all['subj'])
+
     classes_3 = create_dict_for_many_classes(dict_all, 3)
-    for k, v in classes_3.items():
-        print(k, len(v))
+    # for k, v in classes_3.items():
+    #     print(k, len(v))
 
     classes_4 = create_dict_for_many_classes(dict_all, 4)
-    for k, v in classes_4.items():
-        print(k, len(v))
+    # for k, v in classes_4.items():
+    #     print(k, len(v))
 
+    print('---ALL---')
+    analyze(dict_all['subj'])
+
+    for k, v in classes_3.items():
+        print('---3 CLASSES, CLASS: ' + k + '---')
+        analyze(v)
+
+    for k, v in classes_4.items():
+        print('---4 CLASSES, CLASS: ' + k + '---')
+        analyze(v)
 
 
 
