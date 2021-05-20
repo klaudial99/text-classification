@@ -60,17 +60,17 @@ def create_dict_for_many_classes(dict_all_data, classes_amount):
 
     name = 'label_' + str(classes_amount) + '_class'
     for i in range(len(list(dict_all_data.values())[0])): #len of first value
-        data_class[dict_all_data[name][i]].append(dict_all_data['subj'][i])
+        data_class[dict_all_data[name][i]].append(dict_all_data['subj'][i])  # {class: [opinions]}
 
     return data_class
 
 
 def analyze(analyze_set: List):
 
-    vectorizer = CountVectorizer(stop_words='english')
+    vectorizer = CountVectorizer(stop_words='english')  # collection of text documents -> matrix of token counts
     # print(vectorizer.get_stop_words())
-    X = vectorizer.fit_transform(analyze_set)
-    features = vectorizer.get_feature_names()
+    X = vectorizer.fit_transform(analyze_set)  # learn the vocabulary dictionary and return document-term matrix
+    features = vectorizer.get_feature_names()  # array mapping from feature integer indices to feature name
     # print(features)
     print('TOTAL DIFFERENT WORDS AMOUNT:', len(features))
     print('TOTAL OPINIONS AMOUNT:', len(X.toarray()))
@@ -79,20 +79,17 @@ def analyze(analyze_set: List):
 
     words_counter = {}
     words_len = []
-    for i, _ in enumerate(features):
+    for i, _ in enumerate(features):  # add keys
         words_counter[i] = 0
     for opinion in X.toarray():
-        words_len.append(sum(opinion))
+        words_len.append(sum(opinion))  # words in opinion
         for i, word_count in enumerate(opinion):
-            words_counter[i] += word_count
+            words_counter[i] += word_count  # count word occurrences
 
     for i, feature in enumerate(features):
-        words_counter[feature] = words_counter.pop(i)
+        words_counter[feature] = words_counter.pop(i)  # change keys to words
 
-    # for key, value in words_counter.items():
-    #     print(key, value)
-
-    words_counter = {k: v for k, v in sorted(words_counter.items(), key=lambda item: item[1], reverse=True)[:10]}
+    words_counter = {k: v for k, v in sorted(words_counter.items(), key=lambda item: item[1], reverse=True)[:10]}  # sort and take top 10
     print(words_counter)
 
     ########################## LENGTH COUNTER
