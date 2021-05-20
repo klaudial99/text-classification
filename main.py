@@ -52,6 +52,19 @@ def create_dict_all():
     return data_dict
 
 
+def create_dict_for_many_classes(dict_all_data, classes_amount):
+    data_class = {}
+
+    for x in range(classes_amount):
+        data_class[str(x)] = []
+
+    name = 'label_' + str(classes_amount) + '_class'
+    for i in range(len(list(dict_all_data.values())[0])): #len of first value
+        data_class[dict_all_data[name][i]].append(dict_all_data['subj'][i])
+
+    return data_class
+
+
 def analyze(analyze_set: List):
 
     vectorizer = CountVectorizer(stop_words='english')
@@ -95,9 +108,14 @@ def analyze(analyze_set: List):
 if __name__ == '__main__':
 
     dict_all = create_dict_all()
-    analyze(dict_all['subj'])
+    #analyze(dict_all['subj'])
+    classes_3 = create_dict_for_many_classes(dict_all, 3)
+    for k, v in classes_3.items():
+        print(k, len(v))
 
-
+    classes_4 = create_dict_for_many_classes(dict_all, 4)
+    for k, v in classes_4.items():
+        print(k, len(v))
 
 
 
