@@ -115,19 +115,15 @@ if __name__ == '__main__':
     # for k, v in classes_4.items():
     #     print(k, len(v))
 
-    print('---ALL---')
-    analyze(dict_all['subj'])
-
     for k, v in classes_3.items():
         print('---3 CLASSES, CLASS: ' + k + '---')
         analyze(v)
+        print()
 
     for k, v in classes_4.items():
         print('---4 CLASSES, CLASS: ' + k + '---')
         analyze(v)
+        print()
 
-
-
-
-
-
+    print('---ALL---')
+    analyze(dict_all['subj'])
