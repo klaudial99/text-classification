@@ -1,23 +1,29 @@
 from numpy import argmax, mean
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.model_selection import ShuffleSplit, cross_validate
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
+from sklearn.svm import LinearSVC
 
 from main import create_dict_all
 
 
-def naive_bayes(classes):
+def classification(classes, k_param, mode):
     dict_all = create_dict_all()
+    print("CLASSES:", classes, "K:", k_param, "MODE:", mode)
 
     x = dict_all["subj"]
     if classes == 3:
         y = dict_all["label_3_class"]
-    else:
+    elif classes == 4:
         y = dict_all["label_4_class"]
 
-    model = make_pipeline(CountVectorizer(stop_words='english'), SelectKBest(chi2, k=5000), MultinomialNB())
+    if mode == "NB":
+        model = make_pipeline(CountVectorizer(stop_words='english'), SelectKBest(chi2, k=k_param), MultinomialNB())
+    elif mode == "SVM":
+        model = make_pipeline(TfidfVectorizer(stop_words='english'), SelectKBest(chi2, k=k_param), LinearSVC(random_state=0))
+
     cv = ShuffleSplit(n_splits=10, test_size=0.1, random_state=0)
 
     val = cross_validate(model, x, y, cv=cv)
@@ -61,4 +67,12 @@ def naive_bayes(classes):
 
 if __name__ == '__main__':
 
-    naive_bayes(4)
+    # for x in range(3, 5):
+    #     for y in range(1000, 31000, 1000):
+    #         print(x, y)
+    #         classification(x, y, "SVM")
+
+    classification(3, 28000, "NB")
+    classification(4, 10000, "NB")
+    classification(3, 28000, "SVM")
+    classification(4, 6000, "SVM")
